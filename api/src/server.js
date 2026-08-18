@@ -18,7 +18,9 @@ app.use(express.json());
 
 console.log("Rotas de produtos carregadas");
 
-app.use("/card", productRoutes);
+app.use("/cards", cardRoutes);
+app.use("/users", usuarioRoutes);
+app.use("/quadros", quadroRoutes);
 
 
 app.get("/", (req, res) => {

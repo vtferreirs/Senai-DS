@@ -1,19 +1,15 @@
 import mongoose from "mongoose";
 
-const productSchema = new mongoose.Schema({
+const quadroSchema = new mongoose.Schema({
 
-    name: {
-        type: String,
-        required: true
-    },
-
-    price: {
-        type: Number,
-        required: true
-    }
+    titulo_quadro: {type: String, required:true},
+    cor: {type: String, default: "#FFFFFF", required:true},
+    id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true },
+    data_criacao_quadro: {type: Date, default: Date.now},
+    importancia: {type: String, enum: ["Baixa", "Media", "Alta"], default: "Baixa", required:true}
 
 });
 
-const Product = mongoose.model("Product", productSchema);
+const Quadro = mongoose.model("Quadro", quadroSchema);
 
-export default Product;
+export default Quadro;
