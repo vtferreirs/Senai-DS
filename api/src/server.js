@@ -11,16 +11,16 @@ const app = express();
 
 console.log("Esse é o servidor do sla n pensei num nome ainda ");
 
-const PORT = 3000;
+const PORT = 3001;
 
 app.use(express.json());
 
 
 console.log("Rotas de produtos carregadas");
 
-app.use("/cards", cardRoutes);
-app.use("/users", usuarioRoutes);
-app.use("/quadros", quadroRoutes);
+app.use("/card", cardRoutes);
+app.use("/usuario", usuarioRoutes);
+app.use("/quadro", quadroRoutes);
 
 
 app.get("/", (req, res) => {
