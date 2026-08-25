@@ -9,10 +9,14 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 connectDatabase();
 const app = express();
 
-console.log("Esse é o servidor do sla n pensei num nome ainda ");
+console.log("Esse é o servidor TaskVibe ");
 
 const PORT = 3001;
 
+app.use(express.json());
+
+import cors from "cors";
+app.use(cors()); 
 app.use(express.json());
 
 
