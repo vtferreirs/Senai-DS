@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import Reports from "./pages/Reports";
+import Boardview from "./pages/Boardview";
 
 function App() {
   return (
@@ -12,8 +13,10 @@ function App() {
         <Route path="/" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/quadro/:id" element={<Boardview />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/reports" element={<Reports />} />
+
       </Routes>
     </BrowserRouter>
   );

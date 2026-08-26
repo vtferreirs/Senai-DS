@@ -11,10 +11,16 @@ export const getUsuario = async (req, res) => {
 
 export const postUsuario = async (req, res) => {
     try {
-        const novoUsuario = await Usuario.create(req.body);
+        const { nome, email, senha } = req.body;
+        const usuarioExistente = await Usuario.findOne({ email });
+        if (usuarioExistente) {
+            return res.status(400).json({ message: "Já existe uma conta cadastrada com este e-mail." });
+        }
+
+        const novoUsuario = await Usuario.create({ nome, email, senha });
         res.status(201).json(novoUsuario);
     } catch (error) {
-        res.status(400).json({ message: "Erro ao criar usuário." });
+        res.status(400).json({ message: "Erro ao criar usuário. Verifique os dados enviados." });
     }
 };
 

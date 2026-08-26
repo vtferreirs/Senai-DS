@@ -45,7 +45,7 @@ export default function Login() {
 
       localStorage.setItem("user", JSON.stringify(usuarioEncontrado));
       navigate("/dashboard");
-    } catch (err) {
+    } catch (user) {
       setErro("Erro ao realizar login. Verifique sua conexão.");
     } finally {
       setLoading(false);
@@ -101,7 +101,7 @@ export default function Login() {
 
         <div className="auth-footer">
           <p>
-            Ainda não tem uma conta? <Link to="/register">Criar conta</Link>
+            Ainda não tem uma conta? <Link to="/">Criar conta</Link>
           </p>
         </div>
       </div>

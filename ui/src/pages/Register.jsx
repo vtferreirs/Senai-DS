@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Kanban } from "lucide-react";
 import api from "../services/api";
-import { Kanban } from "lucide-react"; 
 import "./Auth.css";
 
 export default function Register() {
@@ -37,14 +37,21 @@ export default function Register() {
 
     try {
       setLoading(true);
-      await api.post("/usuario", {
+
+      // 1. Envia dados para o MongoDB
+      const response = await api.post("/usuario", {
         nome: formData.nome,
         email: formData.email,
         senha: formData.senha,
       });
 
-      navigate("/");
+      // 2. Salva o usuário na sessão (localStorage)
+      localStorage.setItem("user", JSON.stringify(response.data));
+
+      // 3. Redireciona para o Dashboard
+      navigate("/dashboard");
     } catch (err) {
+      // Exibe a mensagem do controller (ex: "Já existe uma conta cadastrada com este e-mail.")
       setErro(err.response?.data?.message || "Erro ao criar conta. Tente novamente.");
     } finally {
       setLoading(false);
@@ -53,12 +60,12 @@ export default function Register() {
 
   return (
     <div className="auth-container">
- <div className="brand-logo">
-  <div className="brand-icon">
-    <Kanban size={20} />
-  </div>
-  Task<span>Vibe</span>
-</div>
+      <div className="brand-logo">
+        <div className="brand-icon">
+          <Kanban size={20} />
+        </div>
+        Task<span>Vibe</span>
+      </div>
 
       <div className="auth-card">
         <div className="auth-header">
@@ -124,7 +131,7 @@ export default function Register() {
 
         <div className="auth-footer">
           <p>
-            Já tem uma conta? <Link to="/">Fazer login</Link>
+            Já tem uma conta? <Link to="/login">Fazer login</Link>
           </p>
         </div>
       </div>
