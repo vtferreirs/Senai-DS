@@ -1,46 +1,35 @@
 import express from "express";
+import cors from "cors";
+import dns from "node:dns";
+import connectDatabase from "./database/connection.js";
 import cardRoutes from "./routes/cardRoutes.js";
 import quadroRoutes from "./routes/quadroRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
-import connectDatabase from "./database/connection.js";
-import dns from "node:dns";
+
 dns.setDefaultResultOrder("ipv4first");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 connectDatabase();
+
 const app = express();
-
-console.log("Esse é o servidor TaskVibe ");
-
 const PORT = 3001;
-
+app.use(cors());
 app.use(express.json());
-
-import cors from "cors";
-app.use(cors()); 
-app.use(express.json());
-
-
-console.log("Rotas de produtos carregadas");
 
 app.use("/card", cardRoutes);
 app.use("/usuario", usuarioRoutes);
 app.use("/quadro", quadroRoutes);
 
-
 app.get("/", (req, res) => {
-    res.json({
-        message: "API está funcionando! "
-    });
+  res.json({
+    message: "API está funcionando! ",
+  });
 });
-
 
 app.get("/teste", (req, res) => {
-    res.send("Servidor de teste funcionando!");
+  res.send("Servidor de teste funcionando!");
 });
 
-
-
-const server = app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+app.listen(PORT, () => {
+  console.log("Esse é o servidor TaskVibe");
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
- 

@@ -49,7 +49,7 @@ export default function Register() {
       localStorage.setItem("user", JSON.stringify(response.data));
 
       // 3. Redireciona para o Dashboard
-      navigate("/dashboard");
+      navigate("/home");
     } catch (err) {
       // Exibe a mensagem do controller (ex: "Já existe uma conta cadastrada com este e-mail.")
       setErro(err.response?.data?.message || "Erro ao criar conta. Tente novamente.");
@@ -82,7 +82,7 @@ export default function Register() {
               type="text"
               id="nome"
               name="nome"
-              placeholder="Seu nome"
+              placeholder="Ex: Seu nome"
               value={formData.nome}
               onChange={handleChange}
             />
@@ -94,7 +94,7 @@ export default function Register() {
               type="email"
               id="email"
               name="email"
-              placeholder="seu@email.com"
+              placeholder="Ex: seu@email.com"
               value={formData.email}
               onChange={handleChange}
             />
@@ -106,7 +106,7 @@ export default function Register() {
               type="password"
               id="senha"
               name="senha"
-              placeholder="••••••••"
+              placeholder=""
               value={formData.senha}
               onChange={handleChange}
             />
@@ -118,7 +118,7 @@ export default function Register() {
               type="password"
               id="confirmarSenha"
               name="confirmarSenha"
-              placeholder="••••••••"
+              placeholder=""
               value={formData.confirmarSenha}
               onChange={handleChange}
             />

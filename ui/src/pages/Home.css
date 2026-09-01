@@ -1,0 +1,116 @@
+.home-container {
+  min-height: 100vh;
+  background-color: #faf7fd;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-content {
+  padding: 60px 48px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Banner de Boas-Vindas */
+.welcome-hero {
+  text-align: center;
+  max-width: 720px;
+  margin-bottom: 48px;
+}
+
+.welcome-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f3e8ff;
+  color: #7c3aed;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.welcome-hero h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.welcome-hero h1 span {
+  color: #7c3aed;
+}
+
+.hero-text {
+  font-size: 1.15rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.hero-text strong {
+  color: #1e1b4b;
+}
+
+/* Card Central de Ação */
+.action-card-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.first-step-card {
+  background: #ffffff;
+  border: 1px solid #f3e8ff;
+  border-radius: 24px;
+  padding: 48px 40px;
+  text-align: center;
+  max-width: 580px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.first-step-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e1b4b;
+}
+
+.first-step-card p {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.btn-create-first {
+  margin-top: 12px;
+  background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.25);
+  transition: all 0.25s ease;
+}
+
+.btn-create-first:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.35);
+}

@@ -44,7 +44,7 @@ export default function Login() {
       }
 
       localStorage.setItem("user", JSON.stringify(usuarioEncontrado));
-      navigate("/dashboard");
+      navigate("/home");
     } catch (user) {
       setErro("Erro ao realizar login. Verifique sua conexão.");
     } finally {

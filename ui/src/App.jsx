@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import Reports from "./pages/Reports";
 import Boardview from "./pages/Boardview";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/quadro/:id" element={<Boardview />} />
         <Route path="/settings" element={<Settings />} />
