@@ -93,14 +93,19 @@ export default function CreateBoardModal({ isOpen, onClose, onCreate }) {
           <div className="preview-container">
             <span className="preview-title">Pré-visualização</span>
             <div className="preview-card" style={{ backgroundColor: cor }}>
-              <h4>{titulo.trim() || "Título do Quadro"}</h4>
-              <div className="preview-footer">
-                <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.85rem", color: "#6b7280" }}>
-                  <Layout size={14} /> Kanban
-                </span>
-                <span className={`badge-importance ${importancia}`}>
-                  {importancia}
-                </span>
+              {/* Faixa horizontal superior colorida conforme a importância */}
+              <div className={`importance-bar ${importancia}`} />
+
+              <div className="preview-card-body">
+                <h4>{titulo.trim() || "Título do Quadro"}</h4>
+                <div className="preview-footer">
+                  <span style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.85rem", color: "#6b7280" }}>
+                    <Layout size={14} /> Kanban
+                  </span>
+                  <span className={`badge-importance ${importancia}`}>
+                    {importancia}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

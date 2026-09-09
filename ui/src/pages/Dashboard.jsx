@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Layout, FolderKanban, Sparkles, Clock } from "lucide-react";
+import { Plus, Layout, FolderKanban, Sparkles, Clock, Trash2 } from "lucide-react";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import CreateBoardModal from "../components/CreateBoardModal";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -14,7 +15,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Mapeamento correto com os nomes de campos do Mongoose
+  // Estados para o Modal de Exclusão Customizado
+  const [boardToDelete, setBoardToDelete] = useState(null);
+
   const fetchQuadros = useCallback(async (usuarioId) => {
     try {
       const response = await api.get(`/quadro?usuarioId=${usuarioId}`);
@@ -80,13 +83,36 @@ export default function Dashboard() {
     }
   };
 
+  // Abre o modal estilizado salvando o quadro selecionado
+  const openDeleteModal = (e, quadro) => {
+    e.stopPropagation();
+    setBoardToDelete({
+      id: quadro._id,
+      titulo: quadro.titulo_quadro || quadro.titulo,
+    });
+  };
+
+  // Executa a exclusão na API
+  const handleConfirmDelete = async () => {
+    if (!boardToDelete) return;
+
+    try {
+      await api.delete(`/quadro/${boardToDelete.id}`);
+      setQuadros((prev) => prev.filter((q) => q._id !== boardToDelete.id));
+      setBoardToDelete(null);
+    } catch (err) {
+      console.error("Erro ao deletar quadro:", err);
+      alert("Não foi possível excluir o quadro.");
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <Navbar user={user} />
 
       <main className="dashboard-content">
         <div className="dashboard-welcome">
-          <h1>Bem-vindo de volta, {user?.nome?.split(" ")[0] || "Usuário"} 👋</h1>
+          <h1>Bem-vindo de volta, {user?.nome?.split(" ")[0] || "Usuário"} </h1>
           <p>Gerencie seus projetos e acompanhe seu fluxo de trabalho.</p>
         </div>
 
@@ -134,25 +160,37 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="boards-grid">
-            {quadros.map((quadro) => (
-              <div
-                key={quadro._id}
-                className="board-card"
-                style={{ backgroundColor: quadro.cor || "#FFFFFF" }}
-                onClick={() => navigate(`/quadro/${quadro._id}`)}
-              >
-                <h3>{quadro.titulo_quadro || quadro.titulo}</h3>
+            {quadros.map((quadro) => {
+              const titulo = quadro.titulo_quadro || quadro.titulo;
+              return (
+                <div
+                  key={quadro._id}
+                  className="board-card"
+                  style={{ backgroundColor: quadro.cor || "#FFFFFF" }}
+                  onClick={() => navigate(`/quadro/${quadro._id}`)}
+                >
+                  <div className="board-card-header">
+                    <h3>{titulo}</h3>
+                    <button
+                      className="btn-delete-board"
+                      title="Excluir quadro"
+                      onClick={(e) => openDeleteModal(e, quadro)}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
 
-                <div className="board-card-footer">
-                  <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <Layout size={14} /> Kanban
-                  </span>
-                  <span className={`badge-importance ${quadro.importancia || "Baixa"}`}>
-                    {quadro.importancia || "Baixa"}
-                  </span>
+                  <div className="board-card-footer">
+                    <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <Layout size={14} /> Kanban
+                    </span>
+                    <span className={`badge-importance ${quadro.importancia || "Baixa"}`}>
+                      {quadro.importancia || "Baixa"}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>
@@ -161,6 +199,13 @@ export default function Dashboard() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onCreate={handleCreateBoard}
+      />
+
+      <DeleteConfirmModal
+        isOpen={Boolean(boardToDelete)}
+        onClose={() => setBoardToDelete(null)}
+        onConfirm={handleConfirmDelete}
+        boardTitle={boardToDelete?.titulo || ""}
       />
     </div>
   );

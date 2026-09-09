@@ -1,0 +1,376 @@
+.container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 20px 40px;
+  background: #ffffff;
+  border-bottom: 3px solid #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btnBack {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 10px;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boardInfo h2 {
+  font-size: 1.4rem;
+  color: #0f172a;
+  margin: 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 30px 40px;
+  flex: 1;
+}
+
+.column {
+  background-color: #f1f5f9;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100vh - 180px);
+}
+
+.columnHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.columnTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.columnTitle h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #334155;
+  font-weight: 700;
+}
+
+.columnTitleInput {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #334155;
+  border: 1px solid #7c3aed;
+  border-radius: 6px;
+  padding: 2px 6px;
+  outline: none;
+}
+
+.columnActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardCount {
+  background-color: #e2e8f0;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.btnColorPicker {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.btnColorPicker input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.btnBgUpload {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #64748b;
+}
+
+.btnBgUpload input[type="file"] {
+  display: none;
+}
+
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.taskCard {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.priorityBar {
+  height: 10px;
+  width: 100%;
+}
+
+.priorityBaixa { background-color: #3b82f6 !important; }
+.priorityMedia { background-color: #f59e0b !important; }
+.priorityAlta { background-color: #ef4444 !important; }
+
+.taskCardContent {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.taskCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.taskCardHeader h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: inherit;
+}
+
+.taskDesc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: inherit;
+}
+
+.taskDate {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: inherit;
+}
+
+.btnDeleteCard {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.btnDeleteCard:hover {
+  color: #ef4444;
+}
+
+.btnAddCard {
+  background: transparent;
+  border: 2px dashed #cbd5e1;
+  color: #64748b;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.addCardForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+}
+
+.addCardForm input, .addCardForm select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+
+.formRowCompact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btnSaveCard {
+  background-color: #7c3aed;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnCancelCard {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.loadingScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #64748b;
+}
+
+/* Modificações no Card para cores e edição */
+.taskCardHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btnEditCard {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.btnEditCard:hover {
+  color: #7c3aed;
+}
+
+.cardColorPicker {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.cardColorPicker input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.cardTextColorPicker {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.cardTextColorPicker:hover {
+  color: #7c3aed;
+}
+
+.cardTextColorPicker input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.btnCardImageUpload {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #94a3b8;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.btnCardImageUpload:hover {
+  color: #7c3aed;
+}
+
+.btnCardImageUpload input[type="file"] {
+  display: none;
+}
+
+.cardImage {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Form Inline de Edição do Card */
+.editCardForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.editCardInput {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #7c3aed;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.editCardTextarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #7c3aed;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+}

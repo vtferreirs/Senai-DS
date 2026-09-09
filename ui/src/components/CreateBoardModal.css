@@ -274,3 +274,35 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.65); /* Escurece o fundo da tela */
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* Garante que fique por cima de tudo */
+  padding: 20px;
+}
+
+.modal-card {
+  background-color: #ffffff !important; /* Força o fundo ser 100% branco e opaco */
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid #f3e8ff;
+  overflow: hidden;
+  animation: modalScale 0.2s ease-out;
+  position: relative;
+  z-index: 10000;
+}
+
+.modal-card.large-modal {
+  max-width: 580px;
+}

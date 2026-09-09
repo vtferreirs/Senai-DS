@@ -217,3 +217,33 @@
   color: #6b7280;
   max-width: 400px;
 }
+
+.board-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.btn-delete-board {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+}
+
+.board-card:hover .btn-delete-board {
+  opacity: 1;
+}
+
+.btn-delete-board:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
