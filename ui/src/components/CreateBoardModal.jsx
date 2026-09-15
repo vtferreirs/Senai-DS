@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { X, Sparkles, Layout } from "lucide-react";
+import { COLOR_PALETTE } from "./colorPalette";
 import "./CreateBoardModal.css";
-
-const COLOR_PALETTE = [
-  "#FFFFFF", // Branco
-  "#F3E8FF", // Roxo Claro
-  "#E0F2FE", // Azul Claro
-  "#DCFCE7", // Verde Claro
-  "#FEF3C7", // Amarelo Claro
-  "#FFE4E6", // Rosa Claro
-];
 
 export default function CreateBoardModal({ isOpen, onClose, onCreate }) {
   const [titulo, setTitulo] = useState("");
@@ -17,6 +9,10 @@ export default function CreateBoardModal({ isOpen, onClose, onCreate }) {
   const [importancia, setImportancia] = useState("Baixa");
 
   if (!isOpen) return null;
+
+  const handlePick = (value) => {
+    setCor(value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,7 +34,7 @@ export default function CreateBoardModal({ isOpen, onClose, onCreate }) {
       <div className="modal-card large-modal">
         <div className="modal-header">
           <div className="modal-title">
-            <Sparkles size={20} style={{ color: "#7c3aed" }} />
+            <Sparkles size={20} style={{ color: "var(--accent)" }} />
             <h3>Criar Novo Quadro</h3>
           </div>
           <button className="btn-close" onClick={onClose}>
@@ -59,40 +55,40 @@ export default function CreateBoardModal({ isOpen, onClose, onCreate }) {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Cor de Fundo</label>
-              <div className="color-options">
-                {COLOR_PALETTE.map((hex) => (
-                  <button
-                    key={hex}
-                    type="button"
-                    className={`color-circle ${cor === hex ? "active" : ""}`}
-                    style={{ backgroundColor: hex }}
-                    onClick={() => setCor(hex)}
-                  />
-                ))}
-              </div>
+          <div className="form-group">
+            <label>Cor de Fundo</label>
+            <div className="color-options">
+              {COLOR_PALETTE.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className={`color-swatch ${c.gradient ? "color-swatch--gradient" : ""} ${
+                    cor === c.value ? "active" : ""}`}
+                  style={{ background: c.value }}
+                  title={c.label}
+                  onClick={() => handlePick(c.value)}
+                />
+              ))}
             </div>
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="board-importance">Importância</label>
-              <select
-                id="board-importance"
-                value={importancia}
-                onChange={(e) => setImportancia(e.target.value)}
-              >
-                <option value="Baixa">Baixa</option>
-                <option value="Media">Média</option>
-                <option value="Alta">Alta</option>
-              </select>
-            </div>
+          <div className="form-group">
+            <label htmlFor="board-importance">Importância</label>
+            <select
+              id="board-importance"
+              value={importancia}
+              onChange={(e) => setImportancia(e.target.value)}
+            >
+              <option value="Baixa">Baixa</option>
+              <option value="Media">Média</option>
+              <option value="Alta">Alta</option>
+            </select>
           </div>
 
           {/* Pré-visualização */}
           <div className="preview-container">
             <span className="preview-title">Pré-visualização</span>
-            <div className="preview-card" style={{ backgroundColor: cor }}>
+            <div className="preview-card" style={{ background: cor }}>
               {/* Faixa horizontal superior colorida conforme a importância */}
               <div className={`importance-bar ${importancia}`} />
 

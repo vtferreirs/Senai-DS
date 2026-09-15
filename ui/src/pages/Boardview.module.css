@@ -1,66 +1,132 @@
 .container {
   min-height: 100vh;
-  background-color: #f8fafc;
   display: flex;
   flex-direction: column;
 }
 
 .header {
-  padding: 20px 40px;
-  background: #ffffff;
-  border-bottom: 3px solid #7c3aed;
+  padding: 18px 36px;
+  background: var(--surface-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-bottom: 3px solid var(--accent);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 68px;
+  z-index: 200;
 }
 
 .btnBack {
   background: transparent;
-  border: 1px solid #e2e8f0;
-  padding: 8px 16px;
-  border-radius: 10px;
-  color: #475569;
-  font-weight: 600;
+  border: 1.5px solid var(--border);
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.88rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: all 0.2s;
+}
+
+.btnBack:hover {
+  border-color: var(--accent-2);
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .boardInfo h2 {
-  font-size: 1.4rem;
-  color: #0f172a;
+  font-size: 1.3rem;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .columns {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  padding: 30px 40px;
+  display: flex;
+  align-items: stretch;
+  gap: 18px;
+  padding: 28px 32px;
   flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 .column {
-  background-color: #f1f5f9;
+  background-color: var(--surface-glass);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
   background-size: cover;
   background-position: center;
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: var(--radius-md);
+  padding: 14px;
   display: flex;
+  flex: 0 0 260px;
+  min-width: 260px;
   flex-direction: column;
   gap: 12px;
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 220px);
+}
+
+.addColumn {
+  flex: 0 0 240px;
+  min-width: 240px;
+  min-height: 220px;
+  align-self: center;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-glass);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.addColumn:hover {
+  border-color: var(--accent-2);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.btnDeleteColumn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.btnDeleteColumn:hover {
+  color: var(--danger);
 }
 
 .columnHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(4px);
-  padding: 8px 12px;
-  border-radius: 10px;
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(8px);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
 .columnTitle {
@@ -68,38 +134,48 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
+  min-width: 0;
 }
 
 .columnTitle h3 {
   margin: 0;
-  font-size: 1rem;
-  color: #334155;
+  font-size: 0.95rem;
+  color: var(--text-primary);
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px;
 }
 
 .columnTitleInput {
-  font-size: 1rem;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #334155;
-  border: 1px solid #7c3aed;
-  border-radius: 6px;
-  padding: 2px 6px;
+  color: var(--text-primary);
+  border: 1.5px solid var(--accent-2);
+  border-radius: 8px;
+  padding: 3px 8px;
   outline: none;
+  background: var(--input-bg);
 }
 
 .columnActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .cardCount {
-  background-color: #e2e8f0;
-  color: #475569;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.8rem;
-  padding: 2px 8px;
-  border-radius: 12px;
+  font-size: 0.78rem;
+  padding: 3px 10px;
+  border-radius: 14px;
 }
 
 .btnColorPicker {
@@ -121,7 +197,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .btnBgUpload input[type="file"] {
@@ -137,23 +213,38 @@
 }
 
 .taskCard {
-  background-color: #ffffff;
+  background-color: var(--surface);
   border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.taskCard:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .priorityBar {
-  height: 10px;
+  height: 6px;
   width: 100%;
+  border-radius: 0;
 }
 
-.priorityBaixa { background-color: #3b82f6 !important; }
-.priorityMedia { background-color: #f59e0b !important; }
-.priorityAlta { background-color: #ef4444 !important; }
+.priorityBaixa {
+  background-color: #3b82f6 !important;
+}
+
+.priorityMedia {
+  background-color: #f59e0b !important;
+}
+
+.priorityAlta {
+  background-color: #ef4444 !important;
+}
 
 .taskCardContent {
   padding: 12px 16px;
@@ -170,134 +261,54 @@
 
 .taskCardHeader h4 {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: inherit;
 }
 
 .taskDesc {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: inherit;
+  opacity: 0.85;
 }
 
 .taskDate {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
-  color: inherit;
+  gap: 5px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.taskCardHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btnDeleteCard {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
+  transition: color 0.2s;
 }
 
 .btnDeleteCard:hover {
-  color: #ef4444;
-}
-
-.btnAddCard {
-  background: transparent;
-  border: 2px dashed #cbd5e1;
-  color: #64748b;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.addCardForm {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: #ffffff;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #cbd5e1;
-}
-
-.addCardForm input, .addCardForm select {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-}
-
-.formRowCompact {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.formActions {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.btnSaveCard {
-  background-color: #7c3aed;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btnCancelCard {
-  background: transparent;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-}
-
-.loadingScreen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  color: #64748b;
-}
-
-/* Modificações no Card para cores e edição */
-.taskCardHeaderActions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  color: var(--danger);
 }
 
 .btnEditCard {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
   transition: color 0.2s;
 }
 
 .btnEditCard:hover {
-  color: #7c3aed;
-}
-
-.cardColorPicker {
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.cardColorPicker input[type="color"] {
-  position: absolute;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
+  color: var(--accent);
 }
 
 .cardTextColorPicker {
@@ -307,10 +318,11 @@
   align-items: center;
   padding: 4px;
   transition: color 0.2s;
+  color: var(--text-muted);
 }
 
 .cardTextColorPicker:hover {
-  color: #7c3aed;
+  color: var(--accent);
 }
 
 .cardTextColorPicker input[type="color"] {
@@ -321,30 +333,96 @@
   cursor: pointer;
 }
 
-.btnCardImageUpload {
-  position: relative;
+/* Botão de Adicionar Card */
+.btnAddCard {
+  background: transparent;
+  border: 2px dashed var(--border-strong);
+  color: var(--text-muted);
+  padding: 11px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: #94a3b8;
-  padding: 4px;
-  transition: color 0.2s;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
 }
 
-.btnCardImageUpload:hover {
-  color: #7c3aed;
+.btnAddCard:hover {
+  border-color: var(--accent-2);
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
-.btnCardImageUpload input[type="file"] {
-  display: none;
+/* Formulário inline de criar card */
+.addCardForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
-.cardImage {
+.addCardForm input,
+.addCardForm select {
   width: 100%;
-  max-height: 160px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 9px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.addCardForm input:focus,
+.addCardForm select:focus {
+  border-color: var(--accent-2);
+}
+
+.formRowCompact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.formRowCompact > div {
+  min-width: 0;
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btnSaveCard {
+  background: var(--gradient-btn);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.btnSaveCard:hover {
+  transform: translateY(-1px);
+}
+
+.btnCancelCard {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
 }
 
 /* Form Inline de Edição do Card */
@@ -357,20 +435,35 @@
 
 .editCardInput {
   width: 100%;
-  padding: 6px 8px;
-  border: 1px solid #7c3aed;
-  border-radius: 6px;
+  padding: 7px 10px;
+  border: 1.5px solid var(--accent-2);
+  border-radius: 8px;
   font-size: 0.85rem;
   outline: none;
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 .editCardTextarea {
   width: 100%;
-  padding: 6px 8px;
-  border: 1px solid #7c3aed;
-  border-radius: 6px;
-  font-size: 0.8rem;
+  padding: 7px 10px;
+  border: 1.5px solid var(--accent-2);
+  border-radius: 8px;
+  font-size: 0.82rem;
   outline: none;
   resize: vertical;
-  font-family: inherit;
+  font-family: var(--font-body);
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.loadingScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1rem;
 }

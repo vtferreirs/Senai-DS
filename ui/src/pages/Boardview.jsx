@@ -1,26 +1,31 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Trash2, Calendar, Edit2, Palette, Image as ImageIcon, Check, X, Type } from "lucide-react";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
+import ColorPickerMenu from "../components/ColorPickerMenu";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import { colorFallback } from "../components/colorPalette";
 import styles from "./Boardview.module.css";
+
+const DEFAULT_COLUNAS = [
+  { titulo: "A Fazer", key: "A Fazer" },
+  { titulo: "Em Andamento", key: "Em Andamento" },
+  { titulo: "Concluído", key: "Concluído" },
+];
 
 export default function BoardView() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const columnsRef = useRef(null);
   const [user, setUser] = useState(null);
   const [quadro, setQuadro] = useState(null);
   const [cards, setCards] = useState([]);
+  const [colunas, setColunas] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Colunas
-  const [colunas, setColunas] = useState([
-    { id: "col-1", key: "A Fazer", titulo: "A Fazer", corFundo: "#f1f5f9", imagemFundo: null },
-    { id: "col-2", key: "Em Andamento", titulo: "Em Andamento", corFundo: "#f1f5f9", imagemFundo: null },
-    { id: "col-3", key: "Concluído", titulo: "Concluído", corFundo: "#f1f5f9", imagemFundo: null },
-  ]);
-
   const [colunaEditando, setColunaEditando] = useState(null);
+  const [colunaParaExcluir, setColunaParaExcluir] = useState(null);
 
   // Estado para edição individual de cards
   const [editingCardId, setEditingCardId] = useState(null);
@@ -33,6 +38,24 @@ export default function BoardView() {
   const [descricao, setDescricao] = useState("");
   const [prioridade, setPrioridade] = useState("Baixa");
   const [dataEntrega, setDataEntrega] = useState("");
+
+  const columnStatus = (coluna) => coluna.key || String(coluna._id);
+
+  const fetchColunas = useCallback(async (quadroId) => {
+    const res = await api.get(`/coluna?id_quadro=${quadroId}`);
+    let colunasCarregadas = Array.isArray(res.data) ? res.data : [];
+
+    if (colunasCarregadas.length === 0) {
+      const criadas = await Promise.all(
+        DEFAULT_COLUNAS.map((d, i) =>
+          api.post("/coluna", { ...d, ordem: i, id_quadro: quadroId })
+        )
+      );
+      colunasCarregadas = criadas.map((r) => r.data);
+    }
+
+    setColunas(colunasCarregadas);
+  }, []);
 
   const fetchDados = useCallback(async () => {
     try {
@@ -49,12 +72,13 @@ export default function BoardView() {
       }
 
       setCards(Array.isArray(cardsRes.data) ? cardsRes.data : []);
+      await fetchColunas(id);
     } catch (err) {
       console.error("Erro ao carregar dados:", err);
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, fetchColunas]);
 
   useEffect(() => {
     const me = localStorage.getItem("user");
@@ -69,26 +93,92 @@ export default function BoardView() {
   // Ações da Coluna
   const handleRenameColumn = (colId, novoTitulo) => {
     setColunas((prev) =>
-      prev.map((c) => (c.id === colId ? { ...c, titulo: novoTitulo } : c))
+      prev.map((c) => (c._id === colId ? { ...c, titulo: novoTitulo } : c))
     );
   };
 
-  const handleColumnColorChange = (colId, cor) => {
+  const handleRenameColumnCommit = async (colId) => {
+    const coluna = colunas.find((c) => c.id === colId);
+    if (!coluna) return;
+    const novoTitulo = coluna.titulo.trim() || "Sem título";
+    try {
+      setColunas((prev) =>
+        prev.map((c) => (c._id === colId ? { ...c, titulo: novoTitulo } : c))
+      );
+      await api.put(`/coluna/${colId}`, { titulo: novoTitulo });
+    } catch (err) {
+      console.error("Erro ao renomear coluna:", err);
+    } finally {
+      setColunaEditando(null);
+    }
+  };
+
+  const handleColumnColorChange = async (colId, cor) => {
     setColunas((prev) =>
-      prev.map((c) => (c.id === colId ? { ...c, corFundo: cor, imagemFundo: null } : c))
+      prev.map((c) => (c._id === colId ? { ...c, corFundo: cor, imagemFundo: null } : c))
     );
+    try {
+      await api.put(`/coluna/${colId}`, { corFundo: cor, imagemFundo: null });
+    } catch (err) {
+      console.error("Erro ao alterar cor da coluna:", err);
+    }
   };
 
   const handleColumnImageUpload = (colId, e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setColunas((prev) =>
-          prev.map((c) => (c.id === colId ? { ...c, imagemFundo: reader.result } : c))
-        );
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const imagem = reader.result;
+      setColunas((prev) =>
+        prev.map((c) => (c._id === colId ? { ...c, imagemFundo: imagem, corFundo: null } : c))
+      );
+      try {
+        await api.put(`/coluna/${colId}`, { imagemFundo: imagem, corFundo: null });
+      } catch (err) {
+        console.error("Erro ao adicionar imagem na coluna:", err);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAddColumn = async () => {
+    try {
+      const response = await api.post("/coluna", {
+        titulo: "Nova Coluna",
+        corFundo: null,
+        id_quadro: id,
+      });
+
+      setColunas((prev) => [...prev, response.data]);
+      setColunaEditando(response.data._id);
+      setColunaAtiva(null);
+      setTimeout(() => {
+        columnsRef.current?.scrollTo({
+          left: columnsRef.current.scrollWidth,
+          behavior: "smooth",
+        });
+      }, 80);
+    } catch (err) {
+      console.error("Erro ao criar coluna:", err);
+      alert("Erro ao criar coluna.");
+    }
+  };
+
+  const handleDeleteColumn = async () => {
+    if (!colunaParaExcluir) return;
+
+    try {
+      await api.delete(`/coluna/${colunaParaExcluir._id}`);
+      const idExcluido = colunaParaExcluir._id;
+      setColunas((prev) => prev.filter((c) => c._id !== idExcluido));
+      setColunaParaExcluir(null);
+      if (colunaAtiva === idExcluido) setColunaAtiva(null);
+      if (colunaEditando === idExcluido) setColunaEditando(null);
+    } catch (err) {
+      console.error("Erro ao excluir coluna:", err);
+      alert("Não foi possível excluir a coluna.");
     }
   };
 
@@ -171,26 +261,6 @@ export default function BoardView() {
     }
   };
 
-  const handleCardImageUpload = (cardId, e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      try {
-        const imagem = reader.result;
-        await api.put(`/card/${cardId}`, { imagem });
-
-        setCards((prev) =>
-          prev.map((c) => (c._id === cardId ? { ...c, imagem } : c))
-        );
-      } catch (err) {
-        alert("Erro ao adicionar imagem no card.");
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
   const handleDeleteCard = async (cardId) => {
     try {
       await api.delete(`/card/${cardId}`);
@@ -210,9 +280,10 @@ export default function BoardView() {
 
   return (
     <div className={styles.container}>
+      <div className="aurora-bg" />
       <Navbar user={user} />
 
-      <header className={styles.header} style={{ borderBottomColor: quadro?.cor || "#7c3aed" }}>
+      <header className={styles.header} style={{ borderBottomColor: colorFallback(quadro?.cor, "#7c3aed") }}>
         <button className={styles.btnBack} onClick={() => navigate("/dashboard")}>
           <ArrowLeft size={18} /> Voltar aos Quadros
         </button>
@@ -222,54 +293,66 @@ export default function BoardView() {
         </div>
       </header>
 
-      <main className={styles.columns}>
+      <main className={styles.columns} ref={columnsRef}>
         {colunas.map((coluna) => {
-          const cardsDaColuna = cards.filter((c) => c.status === coluna.key);
+          const cardsDaColuna = cards.filter((c) => c.status === columnStatus(coluna));
 
           const colStyle = coluna.imagemFundo
             ? { backgroundImage: `url(${coluna.imagemFundo})` }
-            : { backgroundColor: coluna.corFundo };
+            : coluna.corFundo
+              ? { backgroundColor: coluna.corFundo }
+              : {};
 
           return (
-            <div key={coluna.id} className={styles.column} style={colStyle}>
+            <div key={coluna._id} className={styles.column} style={colStyle}>
               <div className={styles.columnHeader}>
-                {colunaEditando === coluna.id ? (
+                {colunaEditando === coluna._id ? (
                   <input
                     type="text"
                     className={styles.columnTitleInput}
                     value={coluna.titulo}
-                    onChange={(e) => handleRenameColumn(coluna.id, e.target.value)}
-                    onBlur={() => setColunaEditando(null)}
+                    onChange={(e) => handleRenameColumn(coluna._id, e.target.value)}
+                    onBlur={() => handleRenameColumnCommit(coluna._id)}
                     autoFocus
                   />
                 ) : (
-                  <div className={styles.columnTitle} onClick={() => setColunaEditando(coluna.id)}>
-                    <h3>{coluna.titulo}</h3>
-                    <Edit2 size={12} color="#64748b" />
-                  </div>
+                  <>
+                    <div className={styles.columnTitle} onClick={() => setColunaEditando(coluna._id)}>
+                      <h3>{coluna.titulo}</h3>
+                      <Edit2 size={12} color="#64748b" />
+                    </div>
+
+                    <div className={styles.columnActions}>
+                      <label className={styles.btnColorPicker} title="Cor da coluna">
+                        <Palette size={16} color="#64748b" />
+                        <input
+                          type="color"
+                          value={coluna.corFundo || "#f1f5f9"}
+                          onChange={(e) => handleColumnColorChange(coluna._id, e.target.value)}
+                        />
+                      </label>
+
+                      <label className={styles.btnBgUpload} title="Imagem de fundo">
+                        <ImageIcon size={16} />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleColumnImageUpload(coluna._id, e)}
+                        />
+                      </label>
+
+                      <button
+                        className={styles.btnDeleteColumn}
+                        title="Excluir coluna"
+                        onClick={() => setColunaParaExcluir(coluna)}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+
+                      <span className={styles.cardCount}>{cardsDaColuna.length}</span>
+                    </div>
+                  </>
                 )}
-
-                <div className={styles.columnActions}>
-                  <label className={styles.btnColorPicker} title="Cor da coluna">
-                    <Palette size={16} color="#64748b" />
-                    <input
-                      type="color"
-                      value={coluna.corFundo}
-                      onChange={(e) => handleColumnColorChange(coluna.id, e.target.value)}
-                    />
-                  </label>
-
-                  <label className={styles.btnBgUpload} title="Imagem de fundo">
-                    <ImageIcon size={16} />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleColumnImageUpload(coluna.id, e)}
-                    />
-                  </label>
-
-                  <span className={styles.cardCount}>{cardsDaColuna.length}</span>
-                </div>
               </div>
 
               <div className={styles.cardsList}>
@@ -277,7 +360,7 @@ export default function BoardView() {
                   <div
                     key={card._id}
                     className={styles.taskCard}
-                    style={{ backgroundColor: card.cor || "#ffffff" }}
+                    style={{ background: card.cor || "#ffffff" }}
                   >
                     {/* Faixa de prioridade */}
                     <div className={`${styles.priorityBar} ${getPriorityBarClass(card.prioridade)}`} />
@@ -322,25 +405,15 @@ export default function BoardView() {
                       ) : (
                         /* Modo Visualização do Card */
                         <>
-                          {card.imagem && (
-                            <img
-                              src={card.imagem}
-                              alt="Imagem do card"
-                              className={styles.cardImage}
-                            />
-                          )}
                           <div className={styles.taskCardHeader}>
                             <h4>{card.titulo}</h4>
                             <div className={styles.taskCardHeaderActions}>
                               {/* Seletor de cor do Card */}
-                              <label className={styles.cardColorPicker} title="Mudar cor do card">
-                                <Palette size={13} color="#94a3b8" />
-                                <input
-                                  type="color"
-                                  value={card.cor || "#ffffff"}
-                                  onChange={(e) => handleCardColorChange(card._id, e.target.value)}
-                                />
-                              </label>
+                              <ColorPickerMenu
+                                value={card.cor || "#ffffff"}
+                                onChange={(v) => handleCardColorChange(card._id, v)}
+                                title="Mudar cor do card"
+                              />
 
                               {/* Seletor de cor do Texto */}
                               <label className={styles.cardTextColorPicker} title="Mudar cor do texto">
@@ -349,16 +422,6 @@ export default function BoardView() {
                                   type="color"
                                   value={card.cor_texto || "#1e293b"}
                                   onChange={(e) => handleCardTextColorChange(card._id, e.target.value)}
-                                />
-                              </label>
-
-                              {/* Botão de Adicionar Imagem no Card */}
-                              <label className={styles.btnCardImageUpload} title="Adicionar imagem ao card">
-                                <ImageIcon size={13} />
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  onChange={(e) => handleCardImageUpload(card._id, e)}
                                 />
                               </label>
 
@@ -395,7 +458,7 @@ export default function BoardView() {
                 ))}
               </div>
 
-              {colunaAtiva === coluna.key ? (
+              {colunaAtiva === coluna._id ? (
                 <div className={styles.addCardForm}>
                   <input
                     type="text"
@@ -431,7 +494,7 @@ export default function BoardView() {
                   </div>
 
                   <div className={styles.formActions}>
-                    <button className={styles.btnSaveCard} onClick={() => handleCreateCard(coluna.key)}>
+                    <button className={styles.btnSaveCard} onClick={() => handleCreateCard(columnStatus(coluna))}>
                       Salvar
                     </button>
                     <button className={styles.btnCancelCard} onClick={() => setColunaAtiva(null)}>
@@ -440,14 +503,29 @@ export default function BoardView() {
                   </div>
                 </div>
               ) : (
-                <button className={styles.btnAddCard} onClick={() => setColunaAtiva(coluna.key)}>
+                <button className={styles.btnAddCard} onClick={() => setColunaAtiva(coluna._id)}>
                   <Plus size={16} /> Nova Tarefa
                 </button>
               )}
             </div>
           );
         })}
+
+        <button className={styles.addColumn} onClick={handleAddColumn}>
+          <Plus size={18} /> Nova Coluna
+        </button>
       </main>
+
+      <DeleteConfirmModal
+        isOpen={Boolean(colunaParaExcluir)}
+        onClose={() => setColunaParaExcluir(null)}
+        onConfirm={handleDeleteColumn}
+        title="Excluir Coluna"
+        subjectName={colunaParaExcluir?.titulo || ""}
+        message="Tem certeza que deseja excluir a coluna"
+        confirmLabel="Sim, excluir"
+        warning="Os cards dessa coluna deixarão de aparecer, mas permanecerão salvos."
+      />
     </div>
   );
 }

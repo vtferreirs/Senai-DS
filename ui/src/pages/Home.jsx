@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Sparkles, ArrowRight, LayoutDashboard } from "lucide-react";
+import {
+  Plus,
+  Sparkles,
+  ArrowRight,
+  LayoutDashboard,
+  Check,
+  PenLine,
+  ClipboardList,
+  Circle,
+} from "lucide-react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
 import "./Home.css";
@@ -43,54 +52,103 @@ export default function Home() {
   };
 
   const handleCreateFirstBoard = () => {
-    // Redireciona para o Dashboard passando uma flag para abrir a criação de quadro imediatamente
     navigate("/dashboard", { state: { openModal: true } });
   };
 
   return (
     <div className="home-container">
+      <div className="aurora-bg" />
       <Navbar user={user} />
 
       <main className="home-content">
-        {/* Banner de Boas-Vindas */}
         <section className="welcome-hero">
           <div className="welcome-badge">
             <Sparkles size={16} /> Sua nova rotina começa aqui
           </div>
           <h1>
-            Bem-vindo(a), <span>{user?.nome?.split(" ")[0] || "Usuário"}</span>! 
+            Bem-vindo(a), <span>{user?.nome?.split(" ")[0] || "Usuário"}</span>!
           </h1>
           <p className="hero-text">
-            O <strong>TaskVibe</strong> é o seu espaço descomplicado de organização. Pense nele como um
-            lugar onde você organiza suas tarefas, projetos e ideias no seu próprio ritmo, 
-            sem estresse e com total clareza.
+            O <strong>TaskVibe</strong> é o seu espaço para <strong>anotar o que você
+            precisa fazer</strong> e transformar ideias soltas em planos. Pense nele como
+            um bloco de notas inteligente: escreva suas tarefas, organize por quadros e
+            acompanhe tudo no seu ritmo.
           </p>
         </section>
 
-        {/* Card Central de Ação */}
-        {!loading && (
-          <section className="action-card-container">
-            {!hasBoards ? (
-              <div className="first-step-card">
-                <h3>Pronto para organizar sua rotina?</h3>
-                <p>Você ainda não possui nenhum quadro criado. Que tal dar o primeiro passo agora?</p>
-                
-                <button onClick={handleCreateFirstBoard} className="btn-create-first">
-                  <Plus size={20} /> Criar meu primeiro quadro
-                </button>
-              </div>
-            ) : (
-              <div className="first-step-card">
-                <h3>Seus quadros estão te esperando!</h3>
-                <p>Você já tem quadros criados. Continue acompanhando o andamento dos seus projetos.</p>
-                
-                <button onClick={() => navigate("/dashboard")} className="btn-create-first">
-                  <LayoutDashboard size={20} /> Ir para meus Quadros <ArrowRight size={18} />
-                </button>
-              </div>
-            )}
-          </section>
-        )}
+        {/* Ilustração: mural de anotações + linha de escrita */}
+        <section className="home-visual-row" aria-hidden="true">
+          <div className="home-mural">
+            <div className="sticky-note sticky-pink">
+              <span className="sticky-pin" />
+              <h4>Estudar React</h4>
+              <ul>
+                <li className="done"><Check size={13} /> Revisar hooks</li>
+                <li><Circle size={13} /> Praticar componentes</li>
+              </ul>
+            </div>
+
+            <div className="sticky-note sticky-purple">
+              <span className="sticky-pin" />
+              <h4>Trabalho em Grupo</h4>
+              <ul>
+                <li className="done"><Check size={13} /> Resumo pronto</li>
+                <li><Circle size={13} /> Montar slides</li>
+              </ul>
+            </div>
+
+            <div className="sticky-note sticky-white">
+              <span className="sticky-pin" />
+              <h4>Hoje</h4>
+              <ul>
+                <li><Circle size={13} /> Mandar e-mail</li>
+                <li><Circle size={13} /> Comprar o lanche</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="home-write-card">
+            <div className="write-icon">
+              <PenLine size={20} />
+            </div>
+            <p className="write-hint">Escreva sua próxima tarefa...</p>
+            <div className="write-checklist">
+              <ClipboardList size={15} />
+            </div>
+          </div>
+        </section>
+
+        <section className="action-card-container">
+          {!loading && (
+            <>
+              {!hasBoards ? (
+                <div className="first-step-card">
+                  <div className="first-step-icon">
+                    <ClipboardList size={24} />
+                  </div>
+                  <h3>Pronto para anotar sua rotina?</h3>
+                  <p>Você ainda não possui nenhum quadro criado. Que tal dar o primeiro passo agora?</p>
+
+                  <button onClick={handleCreateFirstBoard} className="btn-create-first">
+                    <Plus size={20} /> Criar meu primeiro quadro
+                  </button>
+                </div>
+              ) : (
+                <div className="first-step-card">
+                  <div className="first-step-icon">
+                    <LayoutDashboard size={24} />
+                  </div>
+                  <h3>Seus quadros estão te esperando!</h3>
+                  <p>Você já tem quadros criados. Continue acompanhando o andamento dos seus projetos.</p>
+
+                  <button onClick={() => navigate("/dashboard")} className="btn-create-first">
+                    <LayoutDashboard size={20} /> Ir para meus Quadros <ArrowRight size={18} />
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </section>
       </main>
     </div>
   );

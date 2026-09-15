@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Kanban, Layout, BarChart2, Settings, LogOut } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 import "./Navbar.css";
 
 export default function Navbar({ user }) {
@@ -35,6 +36,7 @@ export default function Navbar({ user }) {
 
       <div className="navbar-right">
         <span className="user-name">Olá, {user?.nome || "Usuário"}</span>
+        <ThemeToggle />
         <button onClick={handleLogout} className="btn-logout">
           <LogOut size={16} /> Sair
         </button>

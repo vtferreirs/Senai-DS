@@ -5,6 +5,7 @@ import connectDatabase from "./database/connection.js";
 import cardRoutes from "./routes/cardRoutes.js";
 import quadroRoutes from "./routes/quadroRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
+import colunaRoutes from "./routes/colunaRoutes.js";
 
 dns.setDefaultResultOrder("ipv4first");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/card", cardRoutes);
 app.use("/usuario", usuarioRoutes);
 app.use("/quadro", quadroRoutes);
+app.use("/coluna", colunaRoutes);
 
 app.get("/", (req, res) => {
   res.json({

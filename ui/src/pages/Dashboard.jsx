@@ -166,7 +166,7 @@ export default function Dashboard() {
                 <div
                   key={quadro._id}
                   className="board-card"
-                  style={{ backgroundColor: quadro.cor || "#FFFFFF" }}
+                  style={{ background: quadro.cor || "#FFFFFF" }}
                   onClick={() => navigate(`/quadro/${quadro._id}`)}
                 >
                   <div className="board-card-header">
@@ -205,7 +205,10 @@ export default function Dashboard() {
         isOpen={Boolean(boardToDelete)}
         onClose={() => setBoardToDelete(null)}
         onConfirm={handleConfirmDelete}
-        boardTitle={boardToDelete?.titulo || ""}
+        title="Excluir Quadro"
+        subjectName={boardToDelete?.titulo || ""}
+        message="Tem certeza que deseja excluir o quadro"
+        confirmLabel="Sim, excluir"
       />
     </div>
   );

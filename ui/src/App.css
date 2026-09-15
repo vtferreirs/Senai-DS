@@ -1,6 +1,1 @@
-/* Reseta estilos do container principal da aplicação */
-#root {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
+/* Estilos globais da aplicação são definidos em index.css (design tokens e temas). */

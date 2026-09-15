@@ -5,7 +5,7 @@ const cardSchema = new mongoose.Schema({
     titulo: { type: String, required: true },
     descricao: { type: String },
     data_entrega: { type: Date, required:true},
-    status: { type: String, enum: ["A Fazer", "Em Andamento", "Concluído"], default: "A Fazer", required: true }, 
+    status: { type: String, default: "A Fazer", required: true }, 
     prioridade: { type: String, enum: ["Baixa", "Media", "Alta"], default: "Baixa", required: true }, 
     cor: { type: String, default: "#ffffff" },
     cor_texto: { type: String, default: "#1e293b" },

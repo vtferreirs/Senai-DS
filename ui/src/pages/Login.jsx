@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { Kanban } from "lucide-react";
+import ThemeToggle from "../components/ThemeToggle";
 import "./Auth.css";
 
 export default function Login() {
@@ -54,12 +55,14 @@ export default function Login() {
 
   return (
     <div className="auth-container">
-<div className="brand-logo">
-  <div className="brand-icon">
-    <Kanban size={20} />
-  </div>
-  Task<span>Vibe</span>
-</div>
+      <div className="aurora-bg" />
+      <ThemeToggle floating />
+      <div className="brand-logo">
+        <div className="brand-icon">
+          <Kanban size={20} />
+        </div>
+        Task<span>Vibe</span>
+      </div>
 
       <div className="auth-card">
         <div className="auth-header">

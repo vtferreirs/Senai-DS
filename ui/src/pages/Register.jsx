@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Kanban } from "lucide-react";
 import api from "../services/api";
+import ThemeToggle from "../components/ThemeToggle";
 import "./Auth.css";
 
 export default function Register() {
@@ -60,6 +61,8 @@ export default function Register() {
 
   return (
     <div className="auth-container">
+      <div className="aurora-bg" />
+      <ThemeToggle floating />
       <div className="brand-logo">
         <div className="brand-icon">
           <Kanban size={20} />
